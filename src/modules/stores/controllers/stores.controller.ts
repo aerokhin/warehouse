@@ -66,8 +66,8 @@ export class StoresController {
   async getProductLocation(@Req() req) {
     const productId = HttpUtil.getRequestData<IProductId>(req, 'productId');
     const quantity = HttpUtil.getRequestData<number>(req, 'quantity');
-    const test = await this.productsService.findLocation(productId, quantity);
+    const locations = await this.productsService.findLocations(productId, quantity);
 
-    return test;
+    return locations;
   }
 }

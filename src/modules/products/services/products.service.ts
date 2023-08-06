@@ -35,7 +35,7 @@ export class ProductsService {
     });
   }
 
-  async findLocation(productId: IProductId, quantity: number) {
+  async findLocations(productId: IProductId, quantity: number) {
     const { id, size } = productId;
     const items = await this.turnoversService.findAvailableByQuantity(id, size);
     const result: IProductLocation[] = [];
