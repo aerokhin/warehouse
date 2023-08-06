@@ -1,5 +1,6 @@
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Request, Response } from 'express';
+import { Transaction } from 'sequelize';
 
 export enum TurnoverAction {
   add = 'ADD',
@@ -17,6 +18,10 @@ export interface IProductMeta {
 export interface IProductLocation {
   section: string;
   amount: number;
+}
+
+export interface ITransactionParams {
+  transaction: Transaction;
 }
 
 export enum Size {

@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Size, TurnoverAction } from '../../../core/types';
 import { TurnoverEntity } from '../../../core/entities/turnover.entity';
-import { IProductId } from '../../products/types';
 import { TurnoverDto } from '../../../core/dto/turnover.dto';
 import { Sequelize } from 'sequelize-typescript';
+import { IBulkInsertParams } from '../types';
 
 @Injectable()
 export class TurnoversService {
@@ -72,7 +72,9 @@ export class TurnoversService {
     return additions - removals;
   }
 
-  async bulkInsertProducts(sectionId: number, productIds: IProductId[], action: TurnoverAction) {
+  async bulkInsertProducts(params: IBulkInsertParams) {
+    const { sectionId, productIds, action, transaction } = params;
+
     const turnovers = await this.turnoverEntity.bulkCreate(productIds.map(productId => ({
       sectionId,
       action,
@@ -80,7 +82,9 @@ export class TurnoversService {
       quantity: 1,
       size: productId.size,
       meta: JSON.stringify({ productId })
-    })));
+    })), {
+      transaction
+    });
 
     return turnovers.map(turnover => TurnoverDto.fromEntity(turnover));
   }

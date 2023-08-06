@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { SectionSingleGuard } from '../../../core/guards/section-single.guard';
 import { ProductMultipleGuard } from '../../../core/guards/product-multiple.guard';
 import { TurnoverAddGuard } from '../../../core/guards/turnover-add.guard';
@@ -10,6 +10,9 @@ import { TurnoverRemoveGuard } from '../../../core/guards/turnover-remove.guard'
 import { TurnoverAction } from '../../../core/types';
 import { ProductQuantityGuard } from '../../../core/guards/product-quantity.guard';
 import { ProductsService } from '../../products/services/products.service';
+import { TransactionInterceptor } from '../../../core/interceptors/transaction.interceptor';
+import { Transaction } from 'sequelize';
+import { TransactionParam } from '../../../core/decorators/transaction-param.decorator';
 
 @Controller('stores')
 export class StoresController {
@@ -22,20 +25,38 @@ export class StoresController {
 
   @Post('product')
   @UseGuards(SectionSingleGuard, ProductMultipleGuard, TurnoverAddGuard)
-  async postAddProduct(@Req() req) {
+  @UseInterceptors(TransactionInterceptor)
+  async postAddProduct(
+    @Req() req,
+    @TransactionParam() transaction: Transaction
+  ) {
     const section = HttpUtil.getRequestData<SectionEntity>(req, 'section');
     const productIds = HttpUtil.getRequestData<IProductId[]>(req, 'productIds');
-    const result = await this.turnoversService.bulkInsertProducts(section.id, productIds, TurnoverAction.add);
+    const result = await this.turnoversService.bulkInsertProducts({
+      transaction,
+      productIds,
+      sectionId: section.id,
+      action: TurnoverAction.add
+    });
 
     return result;
   }
 
   @Delete('product')
   @UseGuards(SectionSingleGuard, ProductMultipleGuard, TurnoverRemoveGuard)
-  async deleteRemoveProduct(@Req() req) {
+  @UseInterceptors(TransactionInterceptor)
+  async deleteRemoveProduct(
+    @Req() req,
+    @TransactionParam() transaction: Transaction
+  ) {
     const section = HttpUtil.getRequestData<SectionEntity>(req, 'section');
     const productIds = HttpUtil.getRequestData<IProductId[]>(req, 'productIds');
-    const result = await this.turnoversService.bulkInsertProducts(section.id, productIds, TurnoverAction.remove);
+    const result = await this.turnoversService.bulkInsertProducts({
+      transaction,
+      productIds,
+      sectionId: section.id,
+      action: TurnoverAction.remove
+    });
 
     return result;
   }
