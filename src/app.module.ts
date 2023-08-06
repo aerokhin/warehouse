@@ -1,5 +1,5 @@
 import { CacheModule } from '@nestjs/cache-manager';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './core/controllers/app.controller';
 import { AppService } from './core/services/app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -11,6 +11,8 @@ import { SectionsModule } from './modules/sections/sections.module';
 import { CacheService } from './core/services/cache.service';
 import { ProductsModule } from './modules/products/products.module';
 import { TurnoversModule } from './modules/turnovers/turnovers.module';
+import { LoggerMiddleware } from './core/middlewares/logger.middleware';
+import { LogsModule } from './modules/logs/logs.module';
 
 @Module({
   imports: [
@@ -29,10 +31,18 @@ import { TurnoversModule } from './modules/turnovers/turnovers.module';
     StoresModule,
     SectionsModule,
     ProductsModule,
-    TurnoversModule
+    TurnoversModule,
+    LogsModule
   ],
   controllers: [ AppController ],
-  providers: [ AppService, DatabaseConnectionService, CacheService ],
+  providers: [
+    AppService,
+    DatabaseConnectionService,
+    CacheService
+  ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*'); // Apply the middleware to all routes
+  }
 }

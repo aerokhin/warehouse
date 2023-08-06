@@ -14,7 +14,8 @@ export class SectionSingleGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
     const { req } = HttpUtil.getHttpObjects(context);
-    const sectionId = SectionsUtil.validateId(req.body['section']);
+    const rawId = req.body['section'];
+    const sectionId = SectionsUtil.validateId(rawId);
 
     if (!sectionId) {
       throw new BadRequestException({ message: `Section ID has wrong format` });
@@ -24,7 +25,7 @@ export class SectionSingleGuard implements CanActivate {
     const section = await this.sectionsService.findByRackAliasAndSectionNo(rackAlias, +sectionNo);
 
     if (!section) {
-      throw new BadRequestException({ message: `Section ${sectionId} doesn't exist` });
+      throw new BadRequestException({ message: `Section ${rawId} doesn't exist` });
     }
 
     HttpUtil.setRequestData(req, 'section', section);

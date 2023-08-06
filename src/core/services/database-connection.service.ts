@@ -6,6 +6,7 @@ import { RackEntity } from '../entities/rack.entity';
 import { SectionEntity } from '../entities/section.entity';
 import { ProductEntity } from '../entities/product.entity';
 import { TurnoverEntity } from '../entities/turnover.entity';
+import { LogEntity } from '../entities/log.entity';
 
 @Injectable()
 export class DatabaseConnectionService implements SequelizeOptionsFactory {
@@ -16,6 +17,8 @@ export class DatabaseConnectionService implements SequelizeOptionsFactory {
   }
 
   createSequelizeOptions(): Promise<SequelizeModuleOptions> | SequelizeModuleOptions {
+    const isDev = process.env.NODE_ENV === 'development';
+
     return {
       dialect: 'mysql',
       host: this.configService.get<string>('db.host'),
@@ -23,9 +26,9 @@ export class DatabaseConnectionService implements SequelizeOptionsFactory {
       username: this.configService.get<string>('db.username'),
       password: this.configService.get<string>('db.password'),
       database: this.configService.get<string>('db.database'),
-      logging: process.env.NODE_ENV === 'production' ? false : console.log,
-      synchronize: true,
-      models: [ StoreEntity, RackEntity, SectionEntity, ProductEntity, TurnoverEntity ]
+      logging: isDev ? console.log : false,
+      synchronize: isDev,
+      models: [ StoreEntity, RackEntity, SectionEntity, ProductEntity, TurnoverEntity, LogEntity ]
     };
   }
 
