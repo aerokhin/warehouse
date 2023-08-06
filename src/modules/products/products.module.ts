@@ -5,15 +5,17 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ProductEntity } from '../../core/entities/product.entity';
 import { TurnoversModule } from '../turnovers/turnovers.module';
 import { SectionsModule } from '../sections/sections.module';
+import { ProductsController } from './controllers/products.controller';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([ ProductEntity ]),
-    TurnoversModule,
-    SectionsModule
+    SectionsModule,
+    TurnoversModule
   ],
   providers: [ CacheService, ProductsService ],
-  exports: [ ProductsService ]
+  exports: [ ProductsService ],
+  controllers: [ ProductsController ]
 })
 export class ProductsModule {
 }

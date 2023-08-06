@@ -1,33 +1,33 @@
 import { Controller, Delete, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { TurnoversService } from '../../turnovers/services/turnovers.service';
+import { ProductsService } from '../services/products.service';
 import { SectionSingleGuard } from '../../../core/guards/section-single.guard';
 import { ProductMultipleGuard } from '../../../core/guards/product-multiple.guard';
 import { TurnoverAddGuard } from '../../../core/guards/turnover-add.guard';
-import { TurnoversService } from '../../turnovers/services/turnovers.service';
+import { TransactionInterceptor } from '../../../core/interceptors/transaction.interceptor';
+import { TransactionParam } from '../../../core/decorators/transaction-param.decorator';
+import { Transaction } from 'sequelize';
 import { HttpUtil } from '../../../core/utils/http.util';
 import { SectionEntity } from '../../../core/entities/section.entity';
-import { IProductId } from '../../products/types';
-import { TurnoverRemoveGuard } from '../../../core/guards/turnover-remove.guard';
+import { IProductId } from '../types';
 import { TurnoverAction } from '../../../core/types';
+import { TurnoverRemoveGuard } from '../../../core/guards/turnover-remove.guard';
 import { ProductQuantityGuard } from '../../../core/guards/product-quantity.guard';
-import { ProductsService } from '../../products/services/products.service';
-import { TransactionInterceptor } from '../../../core/interceptors/transaction.interceptor';
-import { Transaction } from 'sequelize';
-import { TransactionParam } from '../../../core/decorators/transaction-param.decorator';
+import { Request } from 'express';
 
-@Controller('stores')
-export class StoresController {
-
+@Controller('products')
+export class ProductsController {
   constructor(
     private readonly turnoversService: TurnoversService,
     private readonly productsService: ProductsService
   ) {
   }
 
-  @Post('product')
+  @Post()
   @UseGuards(SectionSingleGuard, ProductMultipleGuard, TurnoverAddGuard)
   @UseInterceptors(TransactionInterceptor)
   async postAddProduct(
-    @Req() req,
+    @Req() req: Request,
     @TransactionParam() transaction: Transaction
   ) {
     const section = HttpUtil.getRequestData<SectionEntity>(req, 'section');
@@ -42,11 +42,11 @@ export class StoresController {
     return result;
   }
 
-  @Delete('product')
+  @Delete()
   @UseGuards(SectionSingleGuard, ProductMultipleGuard, TurnoverRemoveGuard)
   @UseInterceptors(TransactionInterceptor)
   async deleteRemoveProduct(
-    @Req() req,
+    @Req() req: Request,
     @TransactionParam() transaction: Transaction
   ) {
     const section = HttpUtil.getRequestData<SectionEntity>(req, 'section');
@@ -61,9 +61,9 @@ export class StoresController {
     return result;
   }
 
-  @Get('product/location')
+  @Get('location')
   @UseGuards(ProductQuantityGuard)
-  async getProductLocation(@Req() req) {
+  async getProductLocation(@Req() req: Request) {
     const productId = HttpUtil.getRequestData<IProductId>(req, 'productId');
     const quantity = HttpUtil.getRequestData<number>(req, 'quantity');
     const locations = await this.productsService.findLocations(productId, quantity);
