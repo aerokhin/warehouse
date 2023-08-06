@@ -1,4 +1,5 @@
 import { ISectionId } from '../types';
+import { CommonUtil } from '../../../core/utils/common.util';
 
 export class SectionsUtil {
   static validateId(rawId = ''): ISectionId {

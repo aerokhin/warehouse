@@ -1,5 +1,7 @@
-import { IProductId, ValidateMethods } from '../types';
+import { IProductId, IValidateIdsResult, IValidateProductsResult, ValidateMethods } from '../types';
 import { Size } from '../../../core/types';
+import { CommonUtil } from '../../../core/utils/common.util';
+import { ProductEntity } from '../../../core/entities/product.entity';
 
 const validateMethods: ValidateMethods = {
   'L': (s, result) => {
@@ -12,7 +14,7 @@ const validateMethods: ValidateMethods = {
   'S': (s, result) => {
     const size = s.substring(1);
 
-    if (size in Size) {
+    if ((Object.values(Size) as string[]).includes(size)) {
       result.size = size as Size;
     }
   }
@@ -24,7 +26,7 @@ export class ProductsUtil {
       return null;
     }
 
-    const segments = rawId.split(' ');
+    const segments = CommonUtil.removeMultipleSpaces(rawId).split(' ');
 
     if (segments.length !== 2) {
       return null;
@@ -44,6 +46,57 @@ export class ProductsUtil {
       return null;
     }
 
+    result.raw = rawId;
+
     return result;
+  }
+
+  static validateIds(rawIds: string[]): IValidateIdsResult {
+    const badIds: string[] = [];
+    const productIds: IProductId[] = [];
+
+    for (const rawId of rawIds) {
+      const productId = ProductsUtil.validateId(rawId);
+
+      if (productId) {
+        productIds.push(productId);
+      } else {
+        badIds.push(rawId)
+      }
+    }
+
+    return {
+      badIds,
+      productIds
+    };
+  }
+
+  static validateProducts(products: ProductEntity[], productIds: IProductId[]): IValidateProductsResult {
+    if (productIds.length !== products.length) {
+      const ids = products.map(product => product.id);
+
+      return {
+        badProductIds: productIds.filter(productId => !ids.includes(productId.id)).map(productId => productId.raw),
+        badSizeIds: []
+      };
+    }
+
+    const badSizeIds = productIds
+      .filter(productId =>
+        !products.find(product => product.id === productId.id).meta.sizes.includes(productId.size)
+      )
+      .map(productId => productId.raw);
+
+    if (badSizeIds.length > 0) {
+      return {
+        badSizeIds,
+        badProductIds: []
+      }
+    }
+
+    return {
+      badProductIds: [],
+      badSizeIds: []
+    }
   }
 }

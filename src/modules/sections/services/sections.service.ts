@@ -20,18 +20,37 @@ export class SectionsService {
           include: [
             {
               model: RackEntity,
+              required: true,
               where: {
                 alias: rackAlias
-              },
-              required: true
+              }
             }
           ],
           where: {
-            sectionNo,
-            enabled: true
-          }
+            sectionNo
+          },
         });
       }
     );
   }
+
+  async findByPk(id: number) {
+    return this.cacheService.assign<SectionEntity>(
+      `db/sections/${id}`,
+      async () => {
+        return this.sectionEntity.findOne({
+          include: [
+            {
+              model: RackEntity,
+              required: true
+            }
+          ],
+          where: {
+            id
+          },
+        });
+      }
+    );
+  }
+
 }

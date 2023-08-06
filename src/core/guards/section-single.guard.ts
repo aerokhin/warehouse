@@ -1,10 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { BadRequestException, CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { HttpUtil } from '../utils/http.util';
 import { SectionsService } from '../../modules/sections/services/sections.service';
 import { SectionsUtil } from '../../modules/sections/utils/sections.util';
 
 @Injectable()
-export class SectionExistsGuard implements CanActivate {
+export class SectionSingleGuard implements CanActivate {
   constructor(
     private readonly sectionsService: SectionsService
   ) {
@@ -13,20 +13,18 @@ export class SectionExistsGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
-    const { req, res } = HttpUtil.getHttpObjects(context);
+    const { req } = HttpUtil.getHttpObjects(context);
     const sectionId = SectionsUtil.validateId(req.body['section']);
 
     if (!sectionId) {
-      res.status(400).json({ message: `Section ID has wrong format` });
-      return false;
+      throw new BadRequestException({ message: `Section ID has wrong format` });
     }
 
     const { rackAlias, sectionNo } = sectionId;
     const section = await this.sectionsService.findByRackAliasAndSectionNo(rackAlias, +sectionNo);
 
     if (!section) {
-      res.status(400).json({ message: `Section ${sectionId} doesn't exist` });
-      return false;
+      throw new BadRequestException({ message: `Section ${sectionId} doesn't exist` });
     }
 
     HttpUtil.setRequestData(req, 'section', section);

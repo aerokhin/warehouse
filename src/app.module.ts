@@ -10,6 +10,7 @@ import { StoresModule } from './modules/stores/stores.module';
 import { SectionsModule } from './modules/sections/sections.module';
 import { CacheService } from './core/services/cache.service';
 import { ProductsModule } from './modules/products/products.module';
+import { TurnoversModule } from './modules/turnovers/turnovers.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { ProductsModule } from './modules/products/products.module';
     }),
     StoresModule,
     SectionsModule,
-    ProductsModule
+    ProductsModule,
+    TurnoversModule
   ],
   controllers: [ AppController ],
   providers: [ AppService, DatabaseConnectionService, CacheService ],

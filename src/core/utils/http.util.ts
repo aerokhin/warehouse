@@ -14,7 +14,7 @@ export class HttpUtil {
   static getRequestData<T>(req: Request, key: string, defaultValue = null): T {
     const data: any = req['data'] || {};
 
-    return data[key] as T || defaultValue;
+    return (data[key] as T) || defaultValue;
   }
 
   static setRequestData<T>(req: Request, key: string, value: T) {
@@ -22,6 +22,6 @@ export class HttpUtil {
       req['data'] = {};
     }
 
-    req['data']['key'] = value;
+    req['data'][key] = value;
   }
 }

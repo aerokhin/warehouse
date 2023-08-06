@@ -1,7 +1,7 @@
-import { ProductsExistGuard } from '../products-exist.guard';
+import { ProductMultipleGuard } from '../product-multiple.guard';
 
 describe('ProductsExistGuard', () => {
   it('should be defined', () => {
-    expect(new ProductsExistGuard()).toBeDefined();
+    expect(new ProductMultipleGuard()).toBeDefined();
   });
 });

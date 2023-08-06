@@ -5,6 +5,7 @@ import { StoreEntity } from '../entities/store.entity';
 import { RackEntity } from '../entities/rack.entity';
 import { SectionEntity } from '../entities/section.entity';
 import { ProductEntity } from '../entities/product.entity';
+import { TurnoverEntity } from '../entities/turnover.entity';
 
 @Injectable()
 export class DatabaseConnectionService implements SequelizeOptionsFactory {
@@ -24,7 +25,7 @@ export class DatabaseConnectionService implements SequelizeOptionsFactory {
       database: this.configService.get<string>('db.database'),
       logging: process.env.NODE_ENV === 'production' ? false : console.log,
       synchronize: true,
-      models: [ StoreEntity, RackEntity, SectionEntity, ProductEntity ]
+      models: [ StoreEntity, RackEntity, SectionEntity, ProductEntity, TurnoverEntity ]
     };
   }
 

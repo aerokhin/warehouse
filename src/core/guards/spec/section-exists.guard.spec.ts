@@ -1,7 +1,7 @@
-import { SectionExistsGuard } from '../section-exists.guard';
+import { SectionSingleGuard } from '../section-single.guard';
 
 describe('SectionExistsGuard', () => {
   it('should be defined', () => {
-    expect(new SectionExistsGuard()).toBeDefined();
+    expect(new SectionSingleGuard()).toBeDefined();
   });
 });

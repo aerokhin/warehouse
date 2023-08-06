@@ -14,6 +14,11 @@ export interface IProductMeta {
   sizes: Size[];
 }
 
+export interface IProductLocation {
+  section: string;
+  amount: number;
+}
+
 export enum Size {
   xs = 'XS',
   s = 'S',
