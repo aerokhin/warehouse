@@ -28,7 +28,7 @@ export class TurnoversService {
         size
       },
       group: [ 'section_id', 'product_id' ],
-      // having: Sequelize.literal(`${sumExpression} <= ${quantity}`),
+      having: Sequelize.literal(`${sumExpression} > 0`),
       order: [
         [ 'total', 'ASC' ]
       ]
