@@ -1,8 +1,8 @@
 http:
-  host: 'localhost'
+  host: '192.168.1.32'
   port: 8001
 db:
-  host: '127.0.0.1'
+  host: 'localhost'
   port: 3306
   database: 'warehouse_test'
   username: 'root'

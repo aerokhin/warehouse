@@ -2,7 +2,7 @@ http:
   host: 'localhost'
   port: 8001
 db:
-  host: '127.0.0.1'
+  host: 'localhost'
   port: 5432
   database: 'location_microservice'
   username: 'postgres'

@@ -17,7 +17,7 @@ export class DatabaseConnectionService implements SequelizeOptionsFactory {
   }
 
   createSequelizeOptions(): Promise<SequelizeModuleOptions> | SequelizeModuleOptions {
-    const isDev = process.env.NODE_ENV === 'development';
+    const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
     return {
       dialect: 'mysql',
