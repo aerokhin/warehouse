@@ -6,7 +6,6 @@ import { IProductId } from '../../modules/products/types';
 
 @Injectable()
 export class ProductMultipleGuard implements CanActivate {
-
   constructor(
     private readonly productsService: ProductsService
   ) {
@@ -16,7 +15,7 @@ export class ProductMultipleGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
     const { req } = HttpUtil.getHttpObjects(context);
-    const rawIds: string[] = req.body['products'] || [];
+    const rawIds: string[] = req.body?.['products'] || [];
 
     if (rawIds.length === 0) {
       throw new BadRequestException({

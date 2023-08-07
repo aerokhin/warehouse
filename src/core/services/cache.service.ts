@@ -11,6 +11,10 @@ export class CacheService {
   }
 
   async assign<T>(key: string, valueGetter: () => Promise<T>, ms = CacheTtl.day): Promise<T> {
+    if (!this.cacheManager || !this.cacheManager.get) {
+      return valueGetter();
+    }
+
     const cacheValue = await this.cacheManager.get<T>(key);
 
     if (cacheValue) {

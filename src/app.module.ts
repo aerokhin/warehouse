@@ -1,6 +1,5 @@
 import { CacheModule } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './core/controllers/app.controller';
 import { AppService } from './core/services/app.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './core/utils/configuration.util';
@@ -13,6 +12,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { TurnoversModule } from './modules/turnovers/turnovers.module';
 import { LoggerMiddleware } from './core/middlewares/logger.middleware';
 import { LogsModule } from './modules/logs/logs.module';
+import { RacksModule } from './modules/racks/racks.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { LogsModule } from './modules/logs/logs.module';
       isGlobal: true
     }),
     ConfigModule.forRoot({
-      load: [ configuration(__dirname.toLowerCase() + '/../') ],
+      load: [ configuration() ],
       cache: true,
       isGlobal: true
     }),
@@ -32,9 +32,9 @@ import { LogsModule } from './modules/logs/logs.module';
     SectionsModule,
     ProductsModule,
     TurnoversModule,
-    LogsModule
+    LogsModule,
+    RacksModule
   ],
-  controllers: [ AppController ],
   providers: [
     AppService,
     DatabaseConnectionService,

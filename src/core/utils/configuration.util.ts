@@ -5,7 +5,7 @@ const ENV = process.env.NODE_ENV;
 const YML_CONFIG_FILENAME = 'config.yml';
 
 const configuration = (currentPath?: string) => () => {
-  const resultPath = currentPath || (__dirname.toLowerCase().split('node_modules')[0]);
+  const resultPath = currentPath || (process.cwd() + '/');
 
   return yaml.load(
     readFileSync(resultPath + `config/${ENV ? `${ENV}.` : ''}${YML_CONFIG_FILENAME}`, 'utf8'),

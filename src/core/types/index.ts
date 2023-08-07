@@ -1,6 +1,6 @@
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Request, Response } from 'express';
-import { Transaction } from 'sequelize';
+import { CreationAttributes, Transaction } from 'sequelize';
 
 export enum TurnoverAction {
   add = 'ADD',
@@ -18,6 +18,10 @@ export interface IProductMeta {
 export interface IProductLocation {
   section: string;
   amount: number;
+}
+
+export interface ICreationService<T> {
+  create: (attrs: CreationAttributes<any>) => Promise<T>;
 }
 
 export interface ITransactionParams {

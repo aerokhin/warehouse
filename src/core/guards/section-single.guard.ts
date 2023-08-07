@@ -14,7 +14,7 @@ export class SectionSingleGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
     const { req } = HttpUtil.getHttpObjects(context);
-    const rawId = req.body['section'];
+    const rawId = req.body?.['section'];
     const sectionId = SectionsUtil.validateId(rawId);
 
     if (!sectionId) {

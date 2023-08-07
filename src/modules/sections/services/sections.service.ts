@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { SectionEntity } from '../../../core/entities/section.entity';
 import { CacheService } from '../../../core/services/cache.service';
+import { ICreationService } from '../../../core/types';
 import { RackEntity } from '../../../core/entities/rack.entity';
+import { CreationAttributes } from 'sequelize';
 
 @Injectable()
-export class SectionsService {
+export class SectionsService implements ICreationService<SectionEntity> {
   constructor(
     @InjectModel(SectionEntity) private sectionEntity: typeof SectionEntity,
     private readonly cacheService: CacheService
@@ -53,4 +55,7 @@ export class SectionsService {
     );
   }
 
+  create(attrs: CreationAttributes<any>) {
+    return this.sectionEntity.create(attrs);
+  }
 }

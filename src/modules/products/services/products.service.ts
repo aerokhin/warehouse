@@ -5,10 +5,11 @@ import { ProductEntity } from '../../../core/entities/product.entity';
 import { IProductId } from '../types';
 import { TurnoversService } from '../../turnovers/services/turnovers.service';
 import { SectionsService } from '../../sections/services/sections.service';
-import { IProductLocation } from '../../../core/types';
+import { ICreationService, IProductLocation } from '../../../core/types';
+import { CreationAttributes } from 'sequelize';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService implements ICreationService<ProductEntity> {
   constructor(
     @InjectModel(ProductEntity) private productEntity: typeof ProductEntity,
     private readonly cacheService: CacheService,
@@ -59,5 +60,9 @@ export class ProductsService {
     }
 
     return result;
+  }
+
+  create(attrs: CreationAttributes<any>) {
+    return this.productEntity.create(attrs);
   }
 }
