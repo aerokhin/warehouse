@@ -1,73 +1,74 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Warehouse API Project
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a NestJS project for managing a warehouse. It utilizes the NestJS framework along with Sequelize for database interaction.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Getting Started
 
-## Description
+### Prerequisites
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [MySQL](https://www.mysql.com/) server
+- [Sequelize](https://sequelize.org)
 
-## Installation
+### Installation
 
-```bash
-$ npm install
+Clone the repository:
+
+```sh
+git clone https://github.com/your-username/warehouse.git
+cd warehouse
 ```
 
-## Running the app
+### Configuring MySQL Server
 
-```bash
-# development
-$ npm run start
+1. Make sure your MySQL server is set up and running.
+2. Modify config files to configure MySQL server connection settings. Files location:
+* `/config/*.yml`
+* `/db/config/config.js` (this file is used by `sequelize-cli`)
+3. Check that the IP address you used appears in the result of this SQL query:
+```
+SELECT host FROM mysql.user WHERE User = 'root';
+```
+4. Make sure the IP address you set in the MySQL server configuration is accessible from the Docker container. If it's not, the container won't be able to connect to the MySQL server.
 
-# watch mode
-$ npm run start:dev
+### Run docker
 
-# production mode
-$ npm run start:prod
+1. Run Docker container
+
+```sh
+docker build -t warehouse-api .
+docker run -p 8001:8001 warehouse-api
+```
+2. For testing, the database will be recreated every time you create a Docker.
+
+### Example of requests
+
+1. Add products
+```
+POST http://localhost:8001/products
+```
+```json
+{
+    "section": "AA-1",
+    "products": [ "SM L10001", "SM L10001", "SM L10002" ]
+}
+```
+2. Remove products
+```
+DELETE http://localhost:8001/products
+```
+```json
+{
+    "section": "AA-1",
+    "products": [ "SM L10001" ]
+}
+```
+3. Get product location
+```
+GET http://localhost:8001/products/location?id=L10001%20SM&qty=2
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### E2E Tests
+```sh
+npm test
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
