@@ -43,6 +43,6 @@ import { RacksModule } from './modules/racks/racks.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*'); // Apply the middleware to all routes
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

@@ -15,7 +15,7 @@ This is a NestJS project for managing a warehouse. It utilizes the NestJS framew
 Clone the repository:
 
 ```sh
-git clone https://github.com/your-username/warehouse.git
+git clone https://github.com/aerokhin/warehouse.git
 cd warehouse
 ```
 
@@ -27,7 +27,10 @@ cd warehouse
 * `/db/config/config.js` (this file is used by `sequelize-cli`)
 3. Check that the IP address you used appears in the result of this SQL query:
 ```
-SELECT host FROM mysql.user WHERE User = 'root';
+SELECT
+    host
+FROM mysql.user
+WHERE User = 'root';
 ```
 4. Make sure the IP address you set in the MySQL server configuration is accessible from the Docker container. If it's not, the container won't be able to connect to the MySQL server.
 
@@ -66,6 +69,14 @@ DELETE http://localhost:8001/products
 3. Get product location
 ```
 GET http://localhost:8001/products/location?id=L10001%20SM&qty=2
+```
+
+### Action Logs
+To fetch all user's logs, use the following SQL-query
+```
+SELECT
+    *
+FROM logs;
 ```
 
 ### E2E Tests
